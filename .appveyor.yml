@@ -30,7 +30,7 @@ before_build:
     cd qpid-proton-0.15.0
     mkdir build
     cd build
-    cmake -DBUILD_TESTING=OFF -DBUILD_JAVA=OFF -DCMAKE_BUILD_TYPE=RelWithDebIngo .. -G %generator%
+    cmake -DBUILD_TESTING=OFF -DBUILD_JAVA=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo .. -G %generator%
     cmake --build . --config RelWithDebInfo --target install
     cd ..\..
 - cmd: |-
