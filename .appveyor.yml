@@ -1,0 +1,72 @@
+environment:
+  matrix:
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+
+# Build worker image (VM template)
+image: Visual Studio 2013
+
+init:
+- set arch=
+- if "%arch%"=="Win64" ( set arch= Win64)
+- echo %arch%
+- echo %APPVEYOR_BUILD_WORKER_IMAGE%
+- if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" ( set generator="Visual Studio 15 2017%arch%" )
+- if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" ( set generator="Visual Studio 14 2015%arch%" )
+- if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2013" ( set generator="Visual Studio 12 2013%arch%" )
+- echo %generator%
+
+# scripts that run after cloning repository
+install:
+- cmd: choco install -y unzip gow wget
+
+# build platform, i.e. x86, x64, Any CPU. This setting is optional.
+platform: x64
+
+# scripts to run before build
+before_build:
+- cmd: |-
+    wget "https://github.com/apache/qpid-proton/archive/0.15.0.zip"
+    unzip 0.15.0.zip
+    cd qpid-proton-0.15.0
+    mkdir build
+    cd build
+    cmake -DBUILD_TESTING=OFF -DBUILD_JAVA=OFF -DCMAKE_BUILD_TYPE=RelWithDebIngo .. -G %generator%
+    cmake --build . --config RelWithDebInfo --target install
+    cd ..\..
+- cmd: |-
+    wget "https://github.com/google/googletest/archive/release-1.8.0.zip"
+    unzip release-1.8.0.zip
+    cd googletest-release-1.8.0
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebIngo .. -G %generator%
+    cmake --build . --config RelWithDebInfo --target install
+    cd ..\..
+
+# to run your custom scripts instead of automatic MSBuild
+build_script:
+  - mkdir build
+  - cd build
+  - cmd: |-
+      mkdir build
+      cd build
+      cmake -DCMAKE_BUILD_TYPE=RelWithDebIngo .. -G %generator%
+      cmake --build . --config RelWithDebInfo --target install
+
+# on successful build
+on_success:
+  - echo "Huzzah!"
+
+# on build failure
+on_failure:
+  - echo "I'm melting... I'm melting... What a world... what a world."
+
+# after build failure or success
+on_finish:
+  - echo "Phew"
+
+notifications:
+  - provider: Email
+    to:
+      - fquinn@cascadium.io
+    on_build_status_changed: true
