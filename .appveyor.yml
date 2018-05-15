@@ -39,7 +39,16 @@ before_build:
     cd googletest-release-1.8.0
     mkdir build
     cd build
-    cmake -DCMAKE_BUILD_TYPE=RelWithDebIngo .. -G %generator%
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo .. -G %generator%
+    cmake --build . --config RelWithDebInfo --target install
+    cd ..\..
+- cmd: |-
+    wget "https://github.com/libevent/libevent/archive/release-2.1.8-stable.zip"
+    unzip release-2.1.8-stable.zip
+    cd libevent-release-2.1.8-stable
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo .. -G %generator%
     cmake --build . --config RelWithDebInfo --target install
     cd ..\..
 
@@ -50,8 +59,9 @@ build_script:
   - cmd: |-
       mkdir build
       cd build
-      cmake -DCMAKE_BUILD_TYPE=RelWithDebIngo .. -G %generator%
-      cmake --build . --config RelWithDebInfo --target install
+      dir
+      #cmake -DCMAKE_BUILD_TYPE=RelWithDebIngo .. -G %generator%
+      #cmake --build . --config RelWithDebInfo --target install
 
 # on successful build
 on_success:
