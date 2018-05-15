@@ -48,8 +48,8 @@ before_build:
     cd libevent-release-2.1.8-stable
     mkdir build
     cd build
-    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo .. -G %generator%
-    cmake --build . --config RelWithDebInfo --target install
+    cmake -DCMAKE_BUILD_TYPE=Release .. -G %generator%
+    cmake --build . --config Release --target install
     cd ..\..
 
 # to run your custom scripts instead of automatic MSBuild
