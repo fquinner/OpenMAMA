@@ -30,7 +30,7 @@ before_build:
     cd qpid-proton-0.15.0
     mkdir build
     cd build
-    cmake -DBUILD_TESTING=OFF -DBUILD_JAVA=OFF .. -G %generator%
+    cmake -DBUILD_TESTING=OFF -DBUILD_JAVA=OFF -DBUILD_CPP=OFF .. -G %generator%
     cmake --build . --config Release --target install
     cd ..\..
 - cmd: |-
@@ -40,6 +40,7 @@ before_build:
     mkdir build
     cd build
     cmake -DBUILD_GMOCK=OFF .. -G %generator%
+    gfind .
     cmake --build . --config Release --target install
     cd ..\..
 - cmd: |-
