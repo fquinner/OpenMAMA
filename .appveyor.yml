@@ -58,6 +58,19 @@ before_build:
     cmake -DEVENT__DISABLE_OPENSSL=ON -G %generator% ..
     type include\event2\event-config.h
     cmake --build . --config Release --target install
+- cmd: |-
+    mkdir C:\projects\apr
+    cd C:\projects\apr
+    wget "https://github.com/apache/apr/archive/1.6.3.zip"
+    unzip 1.6.3.zip
+    dir
+    cd apr-1.6.3
+    mkdir build
+    cd build
+    gfind .
+    cmake -G %generator% ..
+    gfind .
+    cmake --build . --config Release --target install
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
