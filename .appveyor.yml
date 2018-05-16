@@ -30,8 +30,8 @@ before_build:
     cd qpid-proton-0.15.0
     mkdir build
     cd build
-    cmake -DBUILD_TESTING=OFF -DBUILD_JAVA=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo .. -G %generator%
-    cmake --build . --config RelWithDebInfo --target install
+    cmake -DBUILD_TESTING=OFF -DBUILD_JAVA=OFF .. -G %generator%
+    cmake --build . --config Release --target install
     cd ..\..
 - cmd: |-
     wget "https://github.com/google/googletest/archive/release-1.8.0.zip"
@@ -39,8 +39,8 @@ before_build:
     cd googletest-release-1.8.0
     mkdir build
     cd build
-    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_GMOCK=OFF .. -G %generator%
-    cmake --build . --config RelWithDebInfo --target install
+    cmake -DBUILD_GMOCK=OFF .. -G %generator%
+    cmake --build . --config Release --target install
     cd ..\..
 - cmd: |-
     wget "https://github.com/libevent/libevent/archive/release-2.1.8-stable.tar.gz"
