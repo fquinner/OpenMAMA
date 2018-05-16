@@ -43,8 +43,8 @@ before_build:
     cmake --build . --config RelWithDebInfo --target install
     cd ..\..
 - cmd: |-
-    wget "https://github.com/libevent/libevent/archive/release-2.1.8-stable.zip"
-    unzip release-2.1.8-stable.zip
+    wget "https://github.com/libevent/libevent/archive/release-2.1.8-stable.tar.gz"
+    cmake -E tar xzf release-2.1.8-stable.tar.gz
     cd libevent-release-2.1.8-stable
     mkdir build
     cd build
