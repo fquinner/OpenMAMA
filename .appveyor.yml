@@ -41,7 +41,7 @@ before_build:
     mkdir build
     cd build
     gfind .
-    cmake -DBUILD_SHARED_LIBS=ON -DBUILD_GMOCK=OFF -G %generator% ..
+    cmake -DBUILD_SHARED_LIBS=ON -G %generator% ..
     gfind .
     cmake --build . --config Release --target install
     cd ..\..
