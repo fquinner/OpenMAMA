@@ -41,7 +41,7 @@ before_build:
     mkdir build
     cd build
     gfind .
-    cmake -DBUILD_SHARED_LIBS=ON -G %generator% ..
+    cmake -DBUILD_SHARED_LIBS=ON -DBUILD_GMOCK=OFF -G %generator% ..
     gfind .
     cmake --build . --config Release --target install
     cd ..\..
@@ -51,6 +51,7 @@ before_build:
     cd libevent-release-2.1.8-stable
     mkdir build
     cd build
+    type include\event2\event-config.h
     cmake -DEVENT__DISABLE_OPENSSL=ON -G %generator% ..
     cmake --build . --config Release --target install
     cd ..\..
@@ -72,12 +73,8 @@ on_success:
 on_failure:
   - echo "I'm melting... I'm melting... What a world... what a world."
 
-# after build failure or success
-on_finish:
-  - echo "Phew"
-
 notifications:
   - provider: Email
     to:
-      - fquinn@cascadium.io
+      - frank@openmama.org
     on_build_status_changed: true
