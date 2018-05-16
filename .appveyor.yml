@@ -39,7 +39,7 @@ before_build:
     cd googletest-release-1.8.0
     mkdir build
     cd build
-    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo .. -G %generator%
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_GMOCK=OFF .. -G %generator%
     cmake --build . --config RelWithDebInfo --target install
     cd ..\..
 - cmd: |-
