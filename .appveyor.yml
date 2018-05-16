@@ -51,8 +51,8 @@ before_build:
     cd libevent-release-2.1.8-stable
     mkdir build
     cd build
-    type include\event2\event-config.h
     cmake -DEVENT__DISABLE_OPENSSL=ON -G %generator% ..
+    type include\event2\event-config.h
     cmake --build . --config Release --target install
     cd ..\..
 
