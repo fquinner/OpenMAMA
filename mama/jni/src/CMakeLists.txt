@@ -37,4 +37,6 @@ add_custom_target(mamajnijavah DEPENDS mamajnijava
 
 set_target_properties(mamajnijava PROPERTIES JAVAH_INCLUDES ${CMAKE_CURRENT_BINARY_DIR})
 
+install (FILES ${MAMAJNI_JAVA_BUILD_DIR}/libs/mamajni.jar DESTINATION lib)
+
 add_subdirectory (c)
