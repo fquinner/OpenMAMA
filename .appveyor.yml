@@ -65,8 +65,8 @@ before_build:
     unzip 1.6.3.zip
     dir
     cd apr-1.6.3
-    mkdir build
-    cd build
+    mkdir bld
+    cd bld
     gfind .
     cmake -G %generator% ..
     gfind .
