@@ -80,6 +80,9 @@ if "OPENMAMA_INSTALL_DIR" not in env_var:
 else:
     install_dir = env_var["OPENMAMA_INSTALL_DIR"]
 
+run_command(args=["echo", install_dir], env=env_var, shell=shell)
+run_command(args=["dir", install_dir], env=env_var, shell=shell)
+
 # Set up environment for unit tests
 if os.name != 'nt':
     env_var["LD_LIBRARY_PATH"] = "%s:%s:%s" % (
