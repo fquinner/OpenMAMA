@@ -79,7 +79,7 @@ build_script:
       cd C:\projects\openmama
       mkdir build
       cd build
-      cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=%OPENMAMA_INSTALL_DIR% -G %generator% ..
+      cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWITH_UNITTEST=ON -DWITH_JAVA=ON -DCMAKE_INSTALL_PREFIX=%OPENMAMA_INSTALL_DIR% -G %generator% ..
       cmake --build . --config RelWithDebInfo --target install
       python release_scripts\ci-run.py
 
