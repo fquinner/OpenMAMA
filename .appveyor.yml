@@ -64,7 +64,7 @@ before_build:
     wget "https://github.com/apache/apr/archive/1.6.3.zip"
     unzip 1.6.3.zip
     dir
-    cd 1.6.3
+    cd apr-1.6.3
     mkdir build
     cd build
     gfind .
