@@ -6,6 +6,7 @@ environment:
 image: Visual Studio 2015
 
 init:
+- set OPENMAMA_INSTALL_DIR=C:\projects\openmama\install
 - set arch=
 - if "%arch%"=="Win64" ( set arch= Win64)
 - echo %arch%
@@ -31,8 +32,8 @@ before_build:
     wget "https://github.com/apache/qpid-proton/archive/0.15.0.zip"
     unzip 0.15.0.zip
     cd qpid-proton-0.15.0
-    mkdir build
-    cd build
+    mkdir bld
+    cd bld
     cmake -DBUILD_TESTING=OFF -DBUILD_JAVA=OFF -DBUILD_CPP=OFF .. -G %generator%
     cmake --build . --config Release --target install
 - cmd: |-
@@ -41,8 +42,8 @@ before_build:
     wget "https://github.com/google/googletest/archive/release-1.8.0.zip"
     unzip release-1.8.0.zip
     cd googletest-release-1.8.0
-    mkdir build
-    cd build
+    mkdir bld
+    cd bld
     gfind .
     cmake -DBUILD_SHARED_LIBS=ON -G %generator% ..
     gfind .
@@ -53,8 +54,8 @@ before_build:
     wget "https://github.com/libevent/libevent/archive/release-2.1.8-stable.tar.gz"
     cmake -E tar xzf release-2.1.8-stable.tar.gz
     cd libevent-release-2.1.8-stable
-    mkdir build
-    cd build
+    mkdir bld
+    cd bld
     cmake -DEVENT__DISABLE_OPENSSL=ON -G %generator% ..
     type include\event2\event-config.h
     cmake --build . --config Release --target install
@@ -78,8 +79,9 @@ build_script:
       cd C:\projects\openmama
       mkdir build
       cd build
-      cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -G %generator% ..
+      cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=%OPENMAMA_INSTALL_DIR% -G %generator% ..
       cmake --build . --config RelWithDebInfo --target install
+      python release_scripts\ci-run.py
 
 # on successful build
 on_success:

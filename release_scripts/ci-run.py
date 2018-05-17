@@ -71,11 +71,14 @@ if os.name != "nt" and "JAVA_HOME" not in env_var:
 if "JAVA_HOME" in env_var:
     scons_cmd.append("java_home=%s" % env_var["JAVA_HOME"])
 
-# Fire off the build
-run_command(args=scons_cmd, env=env_var, shell=shell)
+if "OPENMAMA_INSTALL_DIR" not in env_var:
+    # Fire off the build
+    run_command(args=scons_cmd, env=env_var, shell=shell)
 
-# Installation directory just created
-install_dir = [d for d in os.listdir('.') if os.path.isdir(d) and d.startswith("openmama_install")][0]
+    # Installation directory just created
+    install_dir = [d for d in os.listdir('.') if os.path.isdir(d) and d.startswith("openmama_install")][0]
+else:
+    install_dir = env_var["OPENMAMA_INSTALL_DIR"]
 
 # Set up environment for unit tests
 if os.name != 'nt':
