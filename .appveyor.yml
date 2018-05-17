@@ -45,7 +45,7 @@ before_build:
     mkdir bld
     cd bld
     gfind .
-    cmake -DBUILD_SHARED_LIBS=ON -G %generator% ..
+    cmake -DCMAKE_CXX_FLAGS=-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING -DBUILD_SHARED_LIBS=ON -DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -G %generator% ..
     gfind .
     cmake --build . --config Release --target install
 - cmd: |-
