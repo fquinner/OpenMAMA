@@ -93,7 +93,7 @@ if os.name != 'nt':
 else:
     env_var["PATH"] = os.path.join(os.getcwd(), install_dir, 'bin', 'dynamic') + os.pathsep + env_var["PATH"]
     mama_jni_jar = os.path.join(os.getcwd(), install_dir, 'lib', 'dynamic', 'mamajni.jar')
-    if not os.path.exists(file_path):
+    if not os.path.exists(mama_jni_jar):
         mama_jni_jar = os.path.join(os.getcwd(), install_dir, 'lib', 'mamajni.jar')
     mama_nunit_dll = os.path.join(os.getcwd(), install_dir, 'bin', 'dynamic', 'DOTNET_UNITTESTS.dll')
 
