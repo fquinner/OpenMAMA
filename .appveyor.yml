@@ -18,7 +18,7 @@ init:
 
 # scripts that run after cloning repository
 install:
-- cmd: choco install -y unzip gow wget
+- cmd: choco install -y unzip gow wget gradle
 - cmd: refreshenv
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
