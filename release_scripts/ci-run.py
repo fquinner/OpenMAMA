@@ -22,7 +22,7 @@ def run_command(args, fatal_error=True, env=None, shell=True):
         if fatal_error or p.returncode != 1:
             raise subprocess.CalledProcessError(p.returncode, subprocess.list2cmdline(args))
         else:
-            print "WARNING: %s returned error '%s'" % (subprocess.list2cmdline(args), p.returncode)
+            print("WARNING: %s returned error '%s'" % (subprocess.list2cmdline(args), p.returncode))
 
 env_var = os.environ.copy()
 env_var["PATH"] = env_var["PATH"]
@@ -96,8 +96,11 @@ else:
     if not os.path.exists(mama_jni_jar):
         mama_jni_jar = os.path.join(os.getcwd(), install_dir, 'lib', 'mamajni.jar')
     mama_nunit_dll = os.path.join(os.getcwd(), install_dir, 'bin', 'dynamic', 'DOTNET_UNITTESTS.dll')
+    if not os.path.exists(mama_nunit_dll):
+        mama_nunit_dll = os.path.join(os.getcwd(), install_dir, 'bin', 'DOTNET_UNITTESTS.dll')
 
 env_var["WOMBAT_PATH"] = os.path.join(os.getcwd(), 'mama', 'c_cpp', 'src', 'examples') + os.pathsep + os.path.join(os.getcwd(), 'mama', 'c_cpp', 'src', 'gunittest', 'c')
+mama_java_test_classes_dir = os.path.join(os.getcwd(), 'build', 'mama', 'jni', 'src', 'mama_java_build', 'classes', 'java', 'test')
 
 if "JOB_NAME" in env_var:
     test_failure_fatal = False
@@ -152,7 +155,7 @@ for root, dirs, files in os.walk(install_dir):
 # will know it's broken)
 run_command(args=["java",
                   "-cp",
-                  mama_jni_jar + os.pathsep + os.path.join(junit_home, "junit.jar") + os.pathsep + os.path.join(junit_home, "hamcrest-core.jar"),
+                  mama_jni_jar + os.pathsep + mama_java_test_classes_dir + os.pathsep + os.path.join(junit_home, "junit.jar") + os.pathsep + os.path.join(junit_home, "hamcrest-core.jar"),
                   "com.wombat.mama.junittests.Main",
                   "-m",
                   middleware

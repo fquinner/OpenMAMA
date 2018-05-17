@@ -10,7 +10,7 @@ else()
     find_program(BIN_GRADLE gradle)
 endif()
 
-set(MAMAJNI_JAVA_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/java_build")
+set(MAMAJNI_JAVA_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/mamda_java_build")
 
 ExternalProject_Add(mamdajava
         SOURCE_DIR "."
