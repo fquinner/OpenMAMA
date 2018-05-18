@@ -20,6 +20,7 @@ init:
 install:
 - cmd: choco install -y unzip gow wget gradle
 - cmd: refreshenv
+- cmd: gfind "C:\Tools\NUnit"
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform: x64
