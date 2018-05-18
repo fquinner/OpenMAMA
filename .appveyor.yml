@@ -7,14 +7,7 @@ image: Visual Studio 2017
 
 init:
 - set OPENMAMA_INSTALL_DIR=C:\projects\openmama\install
-- set arch=Win64
-- if "%arch%"=="Win64" ( set arch= Win64)
-- echo %arch%
-- echo %APPVEYOR_BUILD_WORKER_IMAGE%
-- if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" ( set generator="Visual Studio 15 2017%arch%" )
-- if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" ( set generator="Visual Studio 14 2015%arch%" )
-- if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2013" ( set generator="Visual Studio 12 2013%arch%" )
-- echo %generator%
+- set GENERATOR="Visual Studio 15 2017 Win64"
 
 # scripts that run after cloning repository
 install:
@@ -37,7 +30,7 @@ before_build:
     cd qpid-proton-0.15.0
     mkdir bld
     cd bld
-    cmake -DBUILD_TESTING=OFF -DBUILD_JAVA=OFF -DBUILD_CPP=OFF .. -G %generator%
+    cmake -DBUILD_TESTING=OFF -DBUILD_JAVA=OFF -DBUILD_CPP=OFF .. -G %GENERATOR%
     cmake --build . --config Release --target install
 - cmd: |-
     mkdir C:\projects\googletest
@@ -48,7 +41,7 @@ before_build:
     mkdir bld
     cd bld
     gfind .
-    cmake -DCMAKE_CXX_FLAGS=-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING -DBUILD_SHARED_LIBS=ON -DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -G %generator% ..
+    cmake -DCMAKE_CXX_FLAGS=-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING -DBUILD_SHARED_LIBS=ON -DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -G %GENERATOR% ..
     gfind .
     cmake --build . --config Release --target install
 - cmd: |-
@@ -59,7 +52,7 @@ before_build:
     cd libevent-release-2.1.8-stable
     mkdir bld
     cd bld
-    cmake -DEVENT__DISABLE_OPENSSL=ON -G %generator% ..
+    cmake -DEVENT__DISABLE_OPENSSL=ON -G %GENERATOR% ..
     type include\event2\event-config.h
     cmake --build . --config Release --target install
 - cmd: |-
@@ -72,7 +65,7 @@ before_build:
     mkdir bld
     cd bld
     gfind .
-    cmake -G %generator% ..
+    cmake -G %GENERATOR% ..
     gfind .
     cmake --build . --config Release --target install
 
@@ -82,23 +75,9 @@ build_script:
       cd C:\projects\openmama
       mkdir build
       cd build
-      cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWITH_CSHARP=ON -DWITH_UNITTEST=ON -DWITH_JAVA=ON -DINSTALL_RUNTIME_DEPENDENCIES=ON -DCMAKE_INSTALL_PREFIX=%OPENMAMA_INSTALL_DIR% -G %generator% ..
+      cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWITH_CSHARP=ON -DWITH_UNITTEST=ON -DWITH_JAVA=ON -DINSTALL_RUNTIME_DEPENDENCIES=ON -DCMAKE_INSTALL_PREFIX=%OPENMAMA_INSTALL_DIR% -G %GENERATOR% ..
       cmake --build . --config RelWithDebInfo --target install
       cd ..
       python release_scripts\ci-run.py
 
 test: off
-
-# on successful build
-on_success:
-  - echo "Huzzah!"
-
-# on build failure
-on_failure:
-  - echo "I'm melting... I'm melting... What a world... what a world."
-
-notifications:
-  - provider: Email
-    to:
-      - frank@openmama.org
-    on_build_status_changed: true
