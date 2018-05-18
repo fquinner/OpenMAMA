@@ -167,6 +167,7 @@ run_command(args=["java",
 nunit_console = "C:\\Program Files (x86)\\NUnit 2.6.4\\bin\\nunit-console.exe"
 if not os.path.exists(nunit_console):
     nunit_console = "nunit3-console"
+print ("NUNIT_CONSOLE: " + nunit_console)
 
 if os.name == "nt":
     env_var["middlewareName"] = middleware
