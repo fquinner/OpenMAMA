@@ -18,9 +18,10 @@ init:
 
 # scripts that run after cloning repository
 install:
-- cmd: choco install -y unzip gow wget gradle
+- cmd: choco install -y unzip gow wget gradle nunit-console-runner nunit-extension-nunit-v2-driver
 - cmd: refreshenv
 - cmd: gfind "C:\Tools\NUnit"
+- cmd: which nunit3-console
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform: x64
