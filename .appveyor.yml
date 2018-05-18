@@ -87,6 +87,8 @@ build_script:
       cd ..
       python release_scripts\ci-run.py
 
+test: off
+
 # on successful build
 on_success:
   - echo "Huzzah!"
