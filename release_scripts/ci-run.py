@@ -164,12 +164,15 @@ run_command(args=["java",
             shell=shell,
             env=env_var)
 
+nunit_console = "C:\\Program Files (x86)\\NUnit 2.6.4\\bin\\nunit-console.exe"
+if not os.path.exists(nunit_console):
+    nunit_console = "nunit-console"
 
 if os.name == "nt":
     env_var["middlewareName"] = middleware
     env_var["transportName"] = "pub"
     run_command(args=[
-                  "C:\\Program Files (x86)\\NUnit 2.6.4\\bin\\nunit-console.exe",
+                  nunit_console,
                   mama_nunit_dll
                 ],
             fatal_error=True,
