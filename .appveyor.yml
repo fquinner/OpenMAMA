@@ -1,7 +1,7 @@
 # Build worker image (VM template)
 image:
-- Visual Studio 2017
 - Ubuntu
+- Visual Studio 2017
 
 init:
 - cmd: set OPENMAMA_INSTALL_DIR=%APPVEYOR_BUILD_FOLDER%\install
