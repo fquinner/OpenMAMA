@@ -260,7 +260,7 @@ void parseMessage (char * msgString, MamaMsg* msg)
     else if (strcmp(fieldType, "I64") == 0)
     {
         int64_t     realValue;
-        sscanf      (value, "%"PRIi64, &realValue);
+        sscanf      (value, "%" PRIi64, &realValue);
         msg->addI64 (fieldName, fieldId, realValue);
     }
     else if (strcmp(fieldType, "U32") == 0)
@@ -272,7 +272,7 @@ void parseMessage (char * msgString, MamaMsg* msg)
     else if (strcmp(fieldType, "U64") == 0)
     {
         uint64_t    realValue;
-        sscanf      (value, "%"PRIu64, &realValue);
+        sscanf      (value, "%" PRIu64, &realValue);
         msg->addU64 (fieldName, fieldId, realValue);
     }
     else if (strcmp(fieldType, "F32") == 0)

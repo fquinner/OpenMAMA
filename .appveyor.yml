@@ -91,7 +91,7 @@ before_build:
     cd qpid-proton-0.24.0
     mkdir bld
     cd bld
-    cmake -DBUILD_TESTING:BOOL=OFF -DBUILD_JAVA:BOOL=OFF -DCMAKE_INSTALL_PREFIX=/usr ..
+    cmake -DBUILD_TESTING:BOOL=OFF -DBUILD_CPP:BOOL=OFF -DCMAKE_INSTALL_PREFIX=/usr ..
     sudo cmake --build . --config Release --target install
 
 # to run your custom scripts instead of automatic MSBuild
