@@ -139,6 +139,7 @@ for root, dirs, files in os.walk(install_dir):
                                   "--track-origins=no",
                                   "--suppressions=release_scripts/intentionalunittestleaks.supp",
                                   "--xml=yes",
+                                  "--error-exitcode=%d" % int(test_failure_fatal),
                                   "--xml-file=%s.result" % file,
                                   os.path.join('.', root, file),
                                   "-m",
