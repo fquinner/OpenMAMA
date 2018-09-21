@@ -2,6 +2,7 @@ language: c
 
 before_install:
   - export SOURCE_DIR=`pwd`
+  - export OPENMAMA_INSTALL_DIR=$SOURCE_DIR/install
   - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
   - sudo apt-get update -qq
   - sudo apt-get install -y scons git flex uuid-dev libevent-dev cmake git libzmq3-dev openjdk-7-jdk ncurses-dev ant unzip valgrind libapr1-dev
@@ -25,5 +26,10 @@ before_install:
 
 script:
  - cd $SOURCE_DIR
+ - mkdir build
+ - cd build
+ - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWITH_UNITTEST=ON -DWITH_JAVA=ON -DINSTALL_RUNTIME_DEPENDENCIES=ON -DCMAKE_INSTALL_PREFIX=$OPENMAMA_INSTALL_DIR -DCMAKE_CXX_FLAGS=-Werror -DCMAKE_C_FLAGS=-Werror ..
+ - cmake --build . --config RelWithDebInfo --target install
+ - cd ..
  - python release_scripts/ci-run.py
 
