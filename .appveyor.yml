@@ -1,6 +1,6 @@
 # Build worker image (VM template)
 image:
-- Ubuntu
+- ubuntu1804
 - Visual Studio 2017
 
 init:
@@ -10,6 +10,7 @@ init:
 - sh: export OPENMAMA_INSTALL_DIR=$APPVEYOR_BUILD_FOLDER/install
 - sh: export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 - sh: find /usr -name libjawt.so
+- sh: gradle --version
 
 # scripts that run after cloning repository
 install:
@@ -107,7 +108,7 @@ build_script:
       cd $APPVEYOR_BUILD_FOLDER
       mkdir build
       cd build
-      cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWITH_UNITTEST=ON -DWITH_JAVA=ON -DINSTALL_RUNTIME_DEPENDENCIES=ON -DCMAKE_INSTALL_PREFIX=$OPENMAMA_INSTALL_DIR -DCMAKE_CXX_FLAGS=-Werror -DCMAKE_C_FLAGS=-Werror ..
+      cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWITH_UNITTEST=ON -DWITH_JAVA=ON -DINSTALL_RUNTIME_DEPENDENCIES=ON -DCMAKE_INSTALL_PREFIX=$OPENMAMA_INSTALL_DIR -DCMAKE_CXX_FLAGS=-Werror -DCMAKE_C_FLAGS=-Werror -DJAVA_HOME=$JAVA_HOME ..
       cmake --build . --config RelWithDebInfo --target install
       cd ..
       python release_scripts/ci-run.py
