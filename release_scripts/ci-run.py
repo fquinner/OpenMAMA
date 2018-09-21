@@ -50,9 +50,13 @@ if os.name is 'nt':
     dep_base = os.path.join("C:\\", "Deps", env_var["MSVSVER"])
     shell = True
     product = 'mamdaall'
+    env_var["CCFLAGS"] = '/WX'
+    env_var["CXXFLAGS"] = '/WX'
 else:
     dep_base = '/opt'
     shell = False
+    env_var["CCFLAGS"] = '-Werror'
+    env_var["CXXFLAGS"] = '-Werror'
     product = 'mamdajni'
 
 middleware = env_var["MW"].lower()
