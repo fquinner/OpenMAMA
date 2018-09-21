@@ -8,7 +8,7 @@ init:
 - cmd: set GENERATOR="Visual Studio 15 2017 Win64"
 - cmd: set JAVA_HOME=C:\Program Files\Java\jdk1.8.0
 - sh: export OPENMAMA_INSTALL_DIR=$APPVEYOR_BUILD_FOLDER\install
-- sh: export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+- sh: export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 - sh: find /usr -name jni.h
 
 # scripts that run after cloning repository
@@ -111,7 +111,7 @@ build_script:
       cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWITH_CSHARP=ON -DWITH_UNITTEST=ON -DWITH_JAVA=ON -DINSTALL_RUNTIME_DEPENDENCIES=ON -DCMAKE_INSTALL_PREFIX=$OPENMAMA_INSTALL_DIR -DCMAKE_CXX_FLAGS=-Werror -DCMAKE_C_FLAGS=-Werror ..
       cmake --build . --config RelWithDebInfo --target install
       cd ..
-      python release_scripts\ci-run.py
+      python release_scripts/ci-run.py
 
 # The build script already tests as well and this one doesnt work for some reason anyway
 test: off
