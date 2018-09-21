@@ -55,8 +55,10 @@ if os.name is 'nt':
 else:
     dep_base = '/opt'
     shell = False
-    env_var["CCFLAGS"] = '-Werror'
-    env_var["CXXFLAGS"] = '-Werror'
+    # Have to disable error for strict-prototypes otherwise the
+    # CheckLib generated code on scons will fail. Bring on cmake :(
+    env_var["CCFLAGS"] = '-Werror -Wno-error=strict-prototypes'
+    env_var["CXXFLAGS"] = '-Werror -Wno-error=strict-prototypes'
     product = 'mamdajni'
 
 middleware = env_var["MW"].lower()
