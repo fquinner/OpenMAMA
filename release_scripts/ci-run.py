@@ -159,9 +159,6 @@ for root, dirs, files in os.walk(install_dir):
 # These test runners don't generate proper xml with this runner so just
 # mark as error code (will look like a build failure but at least CI
 # will know it's broken)
-run_command(args=["java", "-version"], fatal_error=False, shell=shell)
-run_command(args=["unzip", "-l", mama_jni_jar], fatal_error=False, shell=shell)
-run_command(args=["find", mama_java_test_classes_dir], fatal_error=False, shell=shell)
 run_command(args=["java",
                   "-cp",
                   mama_jni_jar + os.pathsep + mama_java_test_classes_dir + os.pathsep + os.path.join(junit_home, "junit.jar") + os.pathsep + os.path.join(junit_home, "hamcrest-core.jar"),
