@@ -86,7 +86,7 @@ before_build:
 - sh: |-
     mkdir $APPVEYOR_BUILD_FOLDER\qpid-proton
     cd $APPVEYOR_BUILD_FOLDER\qpid-proton
-    wget "https://github.com/apache/qpid-proton/archive/0.15.0.zip"
+    wget "https://github.com/apache/qpid-proton/archive/0.24.0.zip"
     unzip 0.15.0.zip
     cd qpid-proton-0.15.0
     mkdir bld
