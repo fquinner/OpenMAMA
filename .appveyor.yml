@@ -9,7 +9,6 @@ init:
 - cmd: set JAVA_HOME=C:\Program Files\Java\jdk1.8.0
 - sh: export OPENMAMA_INSTALL_DIR=$APPVEYOR_BUILD_FOLDER\install
 - sh: export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-- sh: find /usr -name jni.h
 
 # scripts that run after cloning repository
 install:
@@ -18,7 +17,6 @@ install:
 - cmd: set PATH=C:\ProgramData\chocolatey\bin;%PATH%
 - sh: sudo apt-get update -qq
 - sh: sudo apt-get install -y scons git flex uuid-dev libevent-dev cmake git libzmq3-dev openjdk-8-jdk ncurses-dev ant unzip valgrind libapr1-dev
-- sh: find /usr -name jni.h
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform: x64
