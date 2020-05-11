@@ -2674,11 +2674,6 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
                 throttle = mamaTransportImpl_getThrottle(impl->mTransport,
                         MAMA_THROTTLE_DEFAULT);
 
-            if(NULL != throttle)
-            {
-               wombatThrottle_lock(throttle);
-            }
-
             wlock_lock(impl->mCreateDestroyLock);
 
             /* The next action will depend on the current state of the subscription. */
@@ -2686,7 +2681,12 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
             {
                     /* The subscription is waiting on the throttle. */
                 case MAMA_SUBSCRIPTION_ACTIVATING:
-                     wombatThrottle_removeAction(throttle, impl->mAction);
+                     if(NULL != throttle)
+                     {
+                         wombatThrottle_lock(throttle);
+                         wombatThrottle_removeAction(throttle, impl->mAction);
+                         wombatThrottle_unlock(throttle);
+                     }
                      impl->mAction = NULL;
                      mamaSubscriptionImpl_setState(impl, MAMA_SUBSCRIPTION_DEACTIVATED);
                      ret = MAMA_STATUS_OK;
@@ -2735,11 +2735,6 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
             }
 
             wlock_unlock(impl->mCreateDestroyLock);
-
-            if(NULL != throttle)
-            {
-               wombatThrottle_unlock(throttle);
-            }
         }
         else
         {
