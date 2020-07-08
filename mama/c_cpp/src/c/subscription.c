@@ -1507,11 +1507,6 @@ mama_status mamaSubscription_deactivate_internal(mamaSubscriptionImpl *impl)
         imageRequest_stopWaitForResponse (impl->mRecapRequest);
     }
 
-    /* Mute the subscription to prevent any more updates coming in, note that the subscription bridge will be NULL
-     * for a snapshot or a dictionary subscription.
-     */
-    mamaSubscription_cancel ((mamaSubscription)impl);
-
     /* Write a log message. */
     if (gMamaLogLevel >= MAMA_LOG_LEVEL_FINE)
     {
@@ -2691,7 +2686,11 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
             {
                 wombatThrottle_unlock (throttle);
             }
+
             wlock_lock(impl->mCreateDestroyLock);
+
+            /* Mute the subscription at this point - we want no more messages regardless */
+            mamaSubscription_cancel ((mamaSubscription)impl);
 
             /* The next action will depend on the current state of the subscription. */
             switch(wInterlocked_read(&impl->mState))
