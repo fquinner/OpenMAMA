@@ -2666,16 +2666,15 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
                         MAMA_THROTTLE_DEFAULT);
 
             /* Special case to avoid deadlock: https://github.com/OpenMAMA/OpenMAMA/issues/412 */
-            wlock_lock(impl->mCreateDestroyLock);
             if(NULL != throttle)
             {
                 wombatThrottle_lock (throttle);
             }
+            wlock_lock(impl->mCreateDestroyLock);
             if (MAMA_SUBSCRIPTION_ACTIVATING == wInterlocked_read(&impl->mState)) {
                 if(NULL != throttle)
                 {
                     wombatThrottle_removeAction (throttle, impl->mAction);
-                    wombatThrottle_unlock(throttle);
                 }
                 impl->mAction = NULL;
                 mamaSubscriptionImpl_setState(impl, MAMA_SUBSCRIPTION_DEACTIVATED);
