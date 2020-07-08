@@ -1508,14 +1508,6 @@ mama_status mamaSubscription_deactivate_internal(mamaSubscriptionImpl *impl)
         imageRequest_stopWaitForResponse (impl->mRecapRequest);
     }
 
-    /* Mute the subscription to prevent any more updates coming in, note that the subscription bridge will be NULL
-     * for a snapshot or a dictionary subscription.
-     */
-    if (impl->mSubscBridge)
-    {
-        impl->mBridgeImpl->bridgeMamaSubscriptionMute (impl->mSubscBridge);
-    }
-
     /* Write a log message. */
     if (gMamaLogLevel >= MAMA_LOG_LEVEL_FINE)
     {
@@ -2674,22 +2666,34 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
                 throttle = mamaTransportImpl_getThrottle(impl->mTransport,
                         MAMA_THROTTLE_DEFAULT);
 
+            /* Special case to avoid deadlock: https://github.com/OpenMAMA/OpenMAMA/issues/412 */
             if(NULL != throttle)
             {
-               wombatThrottle_lock(throttle);
+                wombatThrottle_lock (throttle);
             }
-
+            wlock_lock(impl->mCreateDestroyLock);
+            if (MAMA_SUBSCRIPTION_ACTIVATING == wInterlocked_read(&impl->mState)) {
+                if(NULL != throttle)
+                {
+                    wombatThrottle_removeAction (throttle, impl->mAction);
+                    wombatThrottle_unlock(throttle);
+                }
+                impl->mAction = NULL;
+                mamaSubscriptionImpl_setState(impl, MAMA_SUBSCRIPTION_DEACTIVATED);
+                ret = MAMA_STATUS_OK;
+            }
+            wlock_unlock(impl->mCreateDestroyLock);
+            if(NULL != throttle)
+            {
+                wombatThrottle_unlock (throttle);
+            }
             wlock_lock(impl->mCreateDestroyLock);
 
             /* The next action will depend on the current state of the subscription. */
             switch(wInterlocked_read(&impl->mState))
             {
-                    /* The subscription is waiting on the throttle. */
+                /* The subscription is waiting on the throttle - handled before switch. */
                 case MAMA_SUBSCRIPTION_ACTIVATING:
-                     wombatThrottle_removeAction(throttle, impl->mAction);
-                     impl->mAction = NULL;
-                     mamaSubscriptionImpl_setState(impl, MAMA_SUBSCRIPTION_DEACTIVATED);
-                     ret = MAMA_STATUS_OK;
                      break;
 
                 case MAMA_SUBSCRIPTION_REACTIVATING:
@@ -2700,6 +2704,8 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
                 case MAMA_SUBSCRIPTION_ACTIVATED:
                     /* Set the state to indicate that the subscription is in the process of being deactivated. */
                     mamaSubscriptionImpl_setState(impl, MAMA_SUBSCRIPTION_DEACTIVATING);
+                    /* Mute subscription before deactivating */
+                    mamaSubscription_cancel (subscription);
                     /* Deactivate the subscription, clean-up will be performed on the callback. */
                     ret = mamaSubscription_deactivate_internal(impl);
                     if (impl->mSubscMsgType == MAMA_SUBSC_DDICT_SNAPSHOT ||
@@ -2735,11 +2741,6 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
             }
 
             wlock_unlock(impl->mCreateDestroyLock);
-
-            if(NULL != throttle)
-            {
-               wombatThrottle_unlock(throttle);
-            }
         }
         else
         {
@@ -2750,6 +2751,8 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
                 /* Deactivate the subscription. */
                 case MAMA_SUBSCRIPTION_ACTIVATED:
                     mamaSubscriptionImpl_setState(impl, MAMA_SUBSCRIPTION_DEACTIVATING);
+                    /* Mute subscription before deactivating */
+                    mamaSubscription_cancel (subscription);
                     ret = mamaSubscription_deactivate_internal(impl);
                     break;
 
