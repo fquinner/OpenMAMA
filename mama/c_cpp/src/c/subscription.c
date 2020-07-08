@@ -1491,7 +1491,6 @@ mama_status mamaSubscription_deactivate_internal(mamaSubscriptionImpl *impl)
     /* Returns. */
     mama_status ret = MAMA_STATUS_OK;
 
-
     mama_log (MAMA_LOG_LEVEL_FINE, "mamaSubscription_deactivate(): %s%s Initiating deactivation of subscription (%p)", userSymbolFormattedImpl, impl);
 
     /* If any initial request is pending it must be canceled. */
@@ -1507,6 +1506,11 @@ mama_status mamaSubscription_deactivate_internal(mamaSubscriptionImpl *impl)
     {
         imageRequest_stopWaitForResponse (impl->mRecapRequest);
     }
+
+    /* Mute the subscription to prevent any more updates coming in, note that the subscription bridge will be NULL
+     * for a snapshot or a dictionary subscription.
+     */
+    mamaSubscription_cancel ((mamaSubscription)impl);
 
     /* Write a log message. */
     if (gMamaLogLevel >= MAMA_LOG_LEVEL_FINE)
@@ -2667,11 +2671,11 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
                         MAMA_THROTTLE_DEFAULT);
 
             /* Special case to avoid deadlock: https://github.com/OpenMAMA/OpenMAMA/issues/412 */
+            wlock_lock(impl->mCreateDestroyLock);
             if(NULL != throttle)
             {
                 wombatThrottle_lock (throttle);
             }
-            wlock_lock(impl->mCreateDestroyLock);
             if (MAMA_SUBSCRIPTION_ACTIVATING == wInterlocked_read(&impl->mState)) {
                 if(NULL != throttle)
                 {
@@ -2704,8 +2708,6 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
                 case MAMA_SUBSCRIPTION_ACTIVATED:
                     /* Set the state to indicate that the subscription is in the process of being deactivated. */
                     mamaSubscriptionImpl_setState(impl, MAMA_SUBSCRIPTION_DEACTIVATING);
-                    /* Mute subscription before deactivating */
-                    mamaSubscription_cancel (subscription);
                     /* Deactivate the subscription, clean-up will be performed on the callback. */
                     ret = mamaSubscription_deactivate_internal(impl);
                     if (impl->mSubscMsgType == MAMA_SUBSC_DDICT_SNAPSHOT ||
@@ -2751,8 +2753,6 @@ mama_status mamaSubscription_deactivate(mamaSubscription subscription)
                 /* Deactivate the subscription. */
                 case MAMA_SUBSCRIPTION_ACTIVATED:
                     mamaSubscriptionImpl_setState(impl, MAMA_SUBSCRIPTION_DEACTIVATING);
-                    /* Mute subscription before deactivating */
-                    mamaSubscription_cancel (subscription);
                     ret = mamaSubscription_deactivate_internal(impl);
                     break;
 
